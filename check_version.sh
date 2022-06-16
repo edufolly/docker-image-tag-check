@@ -2,6 +2,8 @@
 
 set -e
 
+myVersion=CHECK_VERSION_IN_BRANCH_PROD
+
 code=0
 
 if [ $# -ne 2 ]
@@ -23,6 +25,20 @@ if ! command -v jq &> /dev/null
 then
     echo "'jq' could not be found."
     exit 10
+fi
+
+
+##########
+# update #
+##########
+update=$(curl -s https://raw.githubusercontent.com/edufolly/docker-image-tag-check/prod/VERSION.txt | head -n 1 | cut -f 2 -d '=')
+
+if [ "${myVersion}" != "${update}" ]
+then
+  echo ""
+  echo "[UPDATE] We've a new version: $update"
+  echo "https://raw.githubusercontent.com/edufolly/docker-image-tag-check/"
+  echo ""
 fi
 
 

@@ -6,14 +6,14 @@ Version: CHECK_VERSION_IN_BRANCH_PROD
 
 **Attention**: This is a reference repository.
 
-The docker-compose.yml example is from https://github.com/taigaio/taiga-docker/blob/47c73d1a24a98f1d1200af4ff0abb96c18745e21/docker-compose.yml
+The `docker-compose.yml` is only an [example reference](https://github.com/taigaio/taiga-docker/blob/47c73d1a24a98f1d1200af4ff0abb96c18745e21/docker-compose.yml). 
 
 </br>
 
 ## How to use
 
 ```shell
-./check_version.sh <docker_user> <docker_pass>
+./check_version.sh <docker_user> <docker_token>
 ```
 
 </br>
@@ -25,4 +25,12 @@ Create this GitHub Action secrets:
  - `DOCKER_USERNAME` with the docker username.
  - `DOCKER_TOKEN` with the docker token.
 
+Check the [`ci_build.yml`](https://github.com/edufolly/docker-image-tag-check/blob/main/.github/workflows/ci_build.yml) actions workflow for more details.
 
+## Download
+
+Download the latest script from [prod branch](https://raw.githubusercontent.com/edufolly/docker-image-tag-check/prod/check_version.sh).
+
+```shell
+wget -O check_version.sh https://raw.githubusercontent.com/edufolly/docker-image-tag-check/prod/check_version.sh
+```
