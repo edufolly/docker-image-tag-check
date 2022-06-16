@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Sharepoint Connector Stack
+    name: Docker Image Tag Check Build
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
@@ -20,7 +20,7 @@ jobs:
           sudo apt install -y curl jq
 
       - name: Check Version
-        run: ./check_version.sh ${{ secrets.DOCKERHUB_USERNAME }} ${{ secrets.DOCKERHUB_TOKEN }}
+        run: ./check_version.sh ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_TOKEN }}
 
       - name: Get Branch Attributes
         run: |
