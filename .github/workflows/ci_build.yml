@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Docker Image Tag Check Build
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
@@ -38,6 +38,7 @@ jobs:
         run: |
           export VERSION=$(grep 'VERSION=' VERSION.txt | head -n 1 | cut -f 2 -d '=')${{ env.SUFFIX }}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          sed -i "s/CHECK_VERSION_IN_BRANCH_PROD/$VERSION/g" check_version.sh
           sed -i "s/CHECK_VERSION_IN_BRANCH_PROD/$VERSION/g" docker-compose.yml
           sed -i "s/CHECK_VERSION_IN_BRANCH_PROD/$VERSION/g" README.md
 
