@@ -1,1 +1,28 @@
 # docker-image-tag-check
+
+A shell script to check if the images of docker compose exists.
+
+Version: CHECK_VERSION_IN_BRANCH_PROD
+
+**Attention**: This is a reference repository.
+
+The docker-compose.yml example is from https://github.com/taigaio/taiga-docker/blob/47c73d1a24a98f1d1200af4ff0abb96c18745e21/docker-compose.yml
+
+</br>
+
+## How to use
+
+```shell
+./check_version.sh <docker_user> <docker_pass>
+```
+
+</br>
+
+## Setting up GitHub Actions
+
+Create this GitHub Action secrets:
+
+ - `DOCKER_USERNAME` with the docker username.
+ - `DOCKER_TOKEN` with the docker token.
+
+

@@ -1,0 +1,63 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main, alpha, beta ]
+
+jobs:
+  build:
+    name: Sharepoint Connector Stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update -y
+          sudo apt install -y curl jq
+
+      - name: Check Version
+        run: ./check_version.sh ${{ secrets.DOCKERHUB_USERNAME }} ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get Branch Attributes
+        run: |
+          SUFFIX=""
+          COMMIT_BRANCH=test/$BRANCH
+          case $GITHUB_REF_NAME in
+            main) COMMIT_BRANCH="prod";;
+            alpha) SUFFIX="A";;
+            beta) SUFFIX="B";;
+          esac
+          echo "SUFFIX=$SUFFIX" >> $GITHUB_ENV
+          echo "COMMIT_BRANCH=$COMMIT_BRANCH" >> $GITHUB_ENV
+
+      - name: Get Version
+        run: |
+          export VERSION=$(grep 'VERSION=' VERSION.txt | head -n 1 | cut -f 2 -d '=')${{ env.SUFFIX }}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          sed -i "s/CHECK_VERSION_IN_BRANCH_PROD/$VERSION/g" docker-compose.yml
+          sed -i "s/CHECK_VERSION_IN_BRANCH_PROD/$VERSION/g" README.md
+
+      - name: Commit to Branch
+        run: |
+          git checkout -b ${{ env.COMMIT_BRANCH }}
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -a -m 'Version ${{ env.VERSION }} to ${{ env.COMMIT_BRANCH }} branch.'
+          git push origin ${{ env.COMMIT_BRANCH }} --force
+
+      - name: Creating GitHub Tag
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          custom_tag: ${{ env.VERSION }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v${{ env.VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
