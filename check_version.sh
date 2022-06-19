@@ -89,34 +89,40 @@ fi
 ##################
 # docker-compose #
 ##################
-for image in $(grep --line-buffered 'image:' docker-compose.yml)
+grep 'image:' < docker-compose.yml | while IFS= read -r image
 do
-  if [ "${image}" != "image:" ]
+  repo=${image#*:}
+
+  tag=${repo##*:}
+  tag=$(echo "$tag" | xargs)
+
+  repo=${repo%:*}
+  repo=$(echo "$repo" | xargs)
+
+
+  if [ "${repo}" == "${tag}" ]
   then
-
-    repo=${image%:*}
-    
-    tag=${image##*:}
-
-    echo "Checking: $repo - $tag"
-
-    if [[ "$repo" != *"/"* ]]
-    then
-      repo="library/$repo"
-    fi
-
-    check=$(curl -s -H "Authorization: Bearer $token" $dockerserver/repositories/$repo/tags/$tag | jq --raw-output '.name')
-
-    if [ "${tag}" != "${check}" ]
-    then
-      echo "[ERROR] Local: $tag - Remote: $check"
-      code=40
-    else
-      echo "Local: $tag - Remote: $check"
-    fi
-
-    echo ""
+    tag="latest"
   fi
+
+  echo "Checking: $repo - $tag"
+
+  if [[ "$repo" != *"/"* ]]
+  then
+    repo="library/$repo"
+  fi
+
+  check=$(curl -s -H "Authorization: Bearer $token" $dockerserver/repositories/$repo/tags/$tag | jq --raw-output '.name')
+
+  if [ "${tag}" != "${check}" ]
+  then
+    echo "[ERROR] Local: $tag - Remote: $check"
+    code=40
+  else
+    echo "Local: $tag - Remote: $check"
+  fi
+
+  echo ""
 done
 
 exit $code
