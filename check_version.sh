@@ -2,7 +2,7 @@
 
 set -e
 
-myVersion=CHECK_VERSION_IN_BRANCH_PROD
+myVersion=0.0.3
 
 code=0
 

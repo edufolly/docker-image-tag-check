@@ -2,7 +2,7 @@
 
 A shell script to check if the images of docker compose exists.
 
-Version: CHECK_VERSION_IN_BRANCH_PROD
+Version: 0.0.3
 
 **Attention**: This is a reference repository.
 
