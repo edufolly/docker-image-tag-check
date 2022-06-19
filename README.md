@@ -33,4 +33,6 @@ Download the latest script from [prod branch](https://raw.githubusercontent.com/
 
 ```shell
 wget -O check_version.sh https://raw.githubusercontent.com/edufolly/docker-image-tag-check/prod/check_version.sh
+
+chmod a+x check_version.sh
 ```
